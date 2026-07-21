@@ -1,0 +1,56 @@
+// src/store/cart.ts
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+
+export interface CartItem {
+  id: string;
+  quantity: number;
+}
+
+interface CartStore {
+  items: CartItem[];
+  addItem: (id: string) => void;
+  removeItem: (id: string) => void;
+  clearCart: () => void;
+}
+
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set) => ({
+      items: [],
+      
+      addItem: (id) => set((state) => {
+        const existingItem = state.items.find(item => item.id === id);
+        if (existingItem) {
+          // Если товар уже есть, увеличиваем количество
+          return {
+            items: state.items.map(item => 
+              item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+            )
+          };
+        }
+        // Если товара нет, добавляем новый
+        return { items: [...state.items, { id, quantity: 1 }] };
+      }),
+      
+      removeItem: (id) => set((state) => {
+        const existingItem = state.items.find(item => item.id === id);
+        if (existingItem?.quantity === 1) {
+          // Если осталась 1 штука, удаляем совсем
+          return { items: state.items.filter(item => item.id !== id) };
+        }
+        // Иначе просто уменьшаем количество
+        return {
+          items: state.items.map(item => 
+            item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          )
+        };
+      }),
+      
+      clearCart: () => set({ items: [] }),
+    }),
+    { 
+      name: 'mr-gyros-cart', // Ключ в localStorage
+    }
+  )
+);
