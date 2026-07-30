@@ -57,17 +57,17 @@ export default function Home() {
         />
       </div>
       
-      <div className="p-4 flex flex-col gap-4">
-        {filteredItems.map((item) => (
-          <MenuItemCard key={item.id} item={item} />
-        ))}
-        
-        {filteredItems.length === 0 && (
-          <div className="text-center text-gray-500 mt-10">
-            В этой категории пока ничего нет.
-          </div>
-        )}
-      </div>
+      <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 mx-auto">
+      {filteredItems.map((item) => (
+        <MenuItemCard key={item.id} item={item} />
+      ))}
+      
+      {filteredItems.length === 0 && (
+        <div className="text-center text-gray-500 mt-10 col-span-full">
+          В этой категории пока ничего нет.
+        </div>
+      )}
+    </div>
 
       <FloatingCart />
     </main>

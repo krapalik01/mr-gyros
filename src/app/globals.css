@@ -7,6 +7,13 @@
   --color-dark: #1A1A1A;
 }
 
+@font-face {
+  font-family: 'Dalek';
+  src: url('/fonts/dalek.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Отключаем синее выделение при тапе на мобилках */
 html {
   -webkit-tap-highlight-color: transparent;
