@@ -1,21 +1,21 @@
 "use client";
 
 import { useCartStore } from "@/store/cart";
-import { menuItems } from "@/data/menu";
 import { ShoppingBag } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useHasMounted } from "@/hooks/useHasMounted";
+import { MenuItem } from "@/types";
 
-export const FloatingCart = () => {
+interface Props {
+  menuItems: MenuItem[];
+}
+
+export const FloatingCart = ({ menuItems }: Props) => {
   const items = useCartStore((state) => state.items);
   const router = useRouter();
-  
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
-  // Оставляем проверку только для гидратации Next.js
+  // Корзина живёт в localStorage: до монтирования в браузере не рендерим, чтобы не было ошибок гидратации
+  const mounted = useHasMounted();
   if (!mounted) return null;
 
   // Флаг видимости корзины
@@ -28,10 +28,10 @@ export const FloatingCart = () => {
   }, 0);
 
   return (
-    <div 
+    <div
   className={`fixed bottom-0 left-0 w-full p-4 z-50 bg-gradient-to-t from-marble via-marble to-transparent pb-6 pt-10 transition-all duration-300 ease-out ${
-    isVisible 
-      ? "translate-y-0 opacity-100" 
+    isVisible
+      ? "translate-y-0 opacity-100"
       : "translate-y-full opacity-0 pointer-events-none"
   }`}
 >
