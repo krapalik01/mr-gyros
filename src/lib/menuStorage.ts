@@ -24,6 +24,16 @@ let cache: { data: MenuData; at: number } | null = null;
 
 export const isBlobConfigured = () => Boolean(process.env.BLOB_READ_WRITE_TOKEN);
 
+// На Vercel диск только для чтения, локальный режим там не работает: без Blob сохранять некуда
+const assertWritableStorage = () => {
+  if (!isBlobConfigured() && process.env.VERCEL) {
+    throw new Error(
+      "Хранилище не подключено: в Vercel откройте Storage -> Create -> Blob -> Connect to project, " +
+        "затем Deployments -> Redeploy. Должна появиться переменная BLOB_READ_WRITE_TOKEN."
+    );
+  }
+};
+
 export const seedMenu = (): MenuData => ({
   categories: seedCategories,
   items: seedItems,
@@ -46,6 +56,7 @@ export async function loadMenu(options?: { fresh?: boolean }): Promise<MenuData>
 }
 
 export async function saveMenu(input: MenuData): Promise<MenuData> {
+  assertWritableStorage();
   const data = normalizeMenu({ ...input, updatedAt: new Date().toISOString() });
   const json = JSON.stringify(data, null, 2);
 
@@ -72,6 +83,7 @@ export async function saveImage(
   contentType: "image/jpeg" | "image/png" | "image/webp",
   key: string
 ): Promise<string> {
+  assertWritableStorage();
   const ext = contentType === "image/png" ? "png" : contentType === "image/webp" ? "webp" : "jpg";
   const safeKey = key.replace(/[^a-z0-9_-]/gi, "").slice(0, 60) || "item";
   const filename = `${safeKey}-${Date.now()}.${ext}`;

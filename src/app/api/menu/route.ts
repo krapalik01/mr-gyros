@@ -28,7 +28,7 @@ export async function PUT(request: Request) {
     return NextResponse.json(saved);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Не удалось сохранить меню";
-    const status = /Blob|BLOB|token|fetch/i.test(message) ? 502 : 400;
+    const status = /Blob|BLOB|token|fetch|Хранилище/i.test(message) ? 502 : 400;
     console.error("[menu] save failed:", error);
     return NextResponse.json({ error: message }, { status });
   }
