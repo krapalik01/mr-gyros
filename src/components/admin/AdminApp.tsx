@@ -250,10 +250,6 @@ export const AdminApp = ({ configured, initialAuthed, initialMenu }: Props) => {
             <p className="text-center text-gray-500 py-10">Ничего не найдено</p>
           )}
         </div>
-
-        <p className="text-xs text-gray-400 text-center">
-          Список категорий меняется в коде (src/data/menu.ts). Всё остальное правится здесь и сохраняется автоматически.
-        </p>
       </div>
 
       {editor && (
